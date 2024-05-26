@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "bot-anketa"
+name = "bot_anketa"
 version = "0.1.0"
 description = ""
 authors = ["nezbut_ubuntu <dsfsdfsdf.sdfsdfsfdf.98@mail.ru>"]
@@ -21,6 +21,8 @@ optional = true
 [tool.poetry.group.test.dependencies]
 mypy = "~1.10"
 
+[tool.poetry.scripts]
+tgbot = "bot_anketa.src.__main__:run"
 
 [build-system]
 requires = ["poetry-core"]
