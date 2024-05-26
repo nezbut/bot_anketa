@@ -4,9 +4,22 @@ version = "0.1.0"
 description = ""
 authors = ["nezbut_ubuntu <dsfsdfsdf.sdfsdfsfdf.98@mail.ru>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
+aiogram = "^3"
+sqlalchemy = "^2"
+redis = "^5"
+asyncpg = "^0"
+pydantic-settings = "^2"
+dishka = "^1"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+mypy = "~1.10"
 
 
 [build-system]
