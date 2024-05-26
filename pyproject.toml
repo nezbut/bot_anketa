@@ -12,8 +12,8 @@ aiogram = "^3"
 sqlalchemy = "^2"
 redis = "^5"
 asyncpg = "^0"
-pydantic-settings = "^2"
 dishka = "^1"
+alembic = "~1.13"
 
 [tool.poetry.group.test]
 optional = true
@@ -27,3 +27,8 @@ tgbot = "bot_anketa.src.__main__:run"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+exclude = [
+    "/migrations/",
+]
