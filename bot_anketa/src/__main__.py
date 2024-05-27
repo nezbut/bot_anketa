@@ -19,7 +19,7 @@ async def main() -> None:
     dp = await container.get(Dispatcher)
     settings = await container.get(Settings)
 
-    setup_dishka(container, dp)
+    setup_dishka(container, dp, auto_inject=True)
 
     try:
         await dp.start_polling(bot, container=container, settings=settings)
