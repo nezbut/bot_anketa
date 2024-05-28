@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  tgbot:
+    image: "nezbut/bot_anketa:latest"
+    restart: "unless-stopped"
+    
+    environment:
+      - TG_BOT_TOKEN=TG BOT TOKEN @BotFather
+      - DATABASE_URI=postgresql+asyncpg://nezbut:nezbutpassword@db/bot_anketa
+      - KV_DATABASE_URI=redis://redis_fsm/4
+    depends_on:
+      - redis_fsm
+      - db
+      - db_migrations
+  
+  redis_fsm:
+    image: "redis:7"
+    restart: "unless-stopped"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
+  db:
+    image: postgres
+    restart: "unless-stopped"
+    environment:
+        POSTGRES_USER: nezbut
+        POSTGRES_PASSWORD: nezbutpassword
+        POSTGRES_DB: bot_anketa
+    volumes:
+        - pg_data:/var/lib/postgresql/data
+  
+  db_migrations:
+    image: "nezbut/bot_anketa:latest"
+    restart: "no"
+    depends_on:
+      - db
+    environment:
+      - TG_BOT_TOKEN=TG BOT TOKEN @BotFather
+      - DATABASE_URI=postgresql+asyncpg://nezbut:nezbutpassword@db/bot_anketa
+      - KV_DATABASE_URI=redis://redis_fsm/4
+    
+    entrypoint: alembic -c bot_anketa/src/alembic.ini upgrade head
+    
+volumes:
+  redis_data:
+  pg_data:
