@@ -6,7 +6,7 @@ In this project, I'm just practicing connecting a Python project with Docker/Doc
 
 #### With Docker
 
-1. Replace the environment variables in the docker-compose file.bml on your own.
+1. Replace the environment variables in the docker-compose.yml on your own.
 2. Launch docker compose:
 ```bash
 docker compose up
@@ -14,7 +14,7 @@ docker compose up
 
 #### Without Docker
 
-Для запуска проекта без Docker необходимо выполнить следующие шаги:
+To run a project without Docker, follow these steps:
 
 1. Install and run PostgreSQL and Redis
 2. Set environment variables in the console:
