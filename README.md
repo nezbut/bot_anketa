@@ -24,7 +24,7 @@ cd k8s/
 ```
 
 2. Start k8s cluster
-3. Share your secrets: secrets/dev/secrets.my, secrets/prod/secrets.yml
+3. Insert your secrets: secrets/dev/secrets.my, secrets/prod/secrets.yml
 4. Create a GPG key and put it in secrets/dev/.sops.yaml and secrets/prod/.sops.yaml
 5. Install [sops](https://github.com/getsops/sops)
 6. Install Helm plugin: [helm-secrets](https://github.com/jkroepke/helm-secrets)
