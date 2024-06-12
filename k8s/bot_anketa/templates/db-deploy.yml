@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.database.name }}-deploy"
+spec:
+  {{- with .Values.database }}
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      components: {{ .components }}
+  template:
+    metadata:
+      labels:
+        components: {{ .components }}
+    spec:
+      volumes:
+        - name: "{{ .name }}-data"
+          persistentVolumeClaim:
+            claimName: "{{ .name }}-pvc"
+      containers:
+      - name: "{{ .name }}-container"
+        image: "{{ .image }}:{{ .version }}"
+        resources:
+          limits: {{ .limits | toYaml | nindent 12 }}
+        ports:
+          - containerPort: {{ .port }}
+  {{- end }}
+        env:
+          {{- range .Values.database.envs }}
+          {{- $data := dict "secretName" $.Values.database.name "name" .name "secretKey" .secretKey }}
+          {{- include "env.template" $data | indent 10 }}
+          {{- end }}
+        volumeMounts:
+          - name: "{{ .Values.database.name }}-data"
+            mountPath: {{ .Values.database.volume.mountPath }}
+            subPath: {{ .Values.database.volume.subPath }}

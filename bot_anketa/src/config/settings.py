@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from os import getenv
-from functools import lru_cache
+from os import environ
 
 
 @dataclass
@@ -10,15 +9,11 @@ class Settings:
     kv_database_uri: str
 
     @classmethod
-    @lru_cache
     def from_env(cls) -> "Settings":
-        token = getenv("TG_BOT_TOKEN")
-        db_uri = getenv("DATABASE_URI")
-        kv_db_uri = getenv("KV_DATABASE_URI")
         data = {
-            "tg_bot_token": token,
-            "database_uri": db_uri,
-            "kv_database_uri": kv_db_uri
+            "tg_bot_token": environ.get("TG_BOT_TOKEN"),
+            "database_uri": environ.get("DATABASE_URI"),
+            "kv_database_uri": environ.get("KV_DATABASE_URI")
         }
 
         cls._check_env(**data)

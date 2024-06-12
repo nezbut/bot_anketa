@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.kv_database.name }}-deploy"
+spec:
+  {{- with .Values.kv_database }}
+  selector:
+    matchLabels:
+      components: {{ .components }}
+  template:
+    metadata:
+      labels:
+        components: {{ .components }}
+    spec:
+      containers:
+        - name: "{{ .name }}-container"
+          image: "{{ .image }}:{{ .version }}"
+          resources:
+            limits: {{ .limits | toYaml | nindent 14 }}
+          ports:
+            - containerPort: {{ .port }}
+          volumeMounts:
+            - mountPath: {{ .volumes.mountPathData }}
+              name: data
+            - mountPath: {{ .volumes.mountPathConfig }}
+              name: config
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: "{{ .name }}-config"
+            items:
+              - key: "{{ .name }}-config"
+                path: "kvdb-config.yaml"
+  {{- end }}

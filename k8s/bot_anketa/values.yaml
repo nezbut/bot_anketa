@@ -1,0 +1,75 @@
+migration: true
+
+bot:
+  name: bot-anketa
+  image: nezbut/bot_anketa
+  version: 0.1.0
+  components: botcomp
+  replicas: 1
+  db:
+    type: postgresql
+    driver: asyncpg
+  limits:
+    memory: "250Mi"
+    cpu: "200m"
+  envs:
+    - name: TG_BOT_TOKEN
+      secretKey: TG_BOT_TOKEN
+    - name: DATABASE_URI
+      secretKey: DATABASE_URI
+    - name: KV_DATABASE_URI
+      secretKey: KV_DATABASE_URI
+
+jobs:
+  migration:
+    name: migration
+    restartPolicy: Never
+    backoffLimit: 2
+
+database:
+  name: psql
+  image: postgres
+  version: 16.0
+  replicas: 1
+  components: psqlcomp
+  dbname: bot_anketa
+  limits:
+    memory: "250Mi"
+    cpu: "200m"
+  pvc:
+    storageSize: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  envs:
+    - name: POSTGRES_DB
+      secretKey: POSTGRES_DB
+    - name: POSTGRES_USER
+      secretKey: POSTGRES_USER
+    - name: POSTGRES_PASSWORD
+      secretKey: POSTGRES_PASSWORD
+  volume:
+    mountPath: /var/lib/postgresql/data
+    subPath: postgres
+
+kv_database:
+  name: redis
+  port: 6379
+  components: rediscomp
+  db: 4
+  image: redis
+  version: 7.2
+  limits:
+    memory: "250Mi"
+    cpu: "200m"
+  pvc:
+    storageSize: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  configData:
+    redis-config: |
+      save 600 1
+      dbfilename redis_dump.rdb
+  volumes:
+    mountPathData: /redis-master-data
+    mountPathConfig: /redis-master
+    mountPathPath: redis.conf

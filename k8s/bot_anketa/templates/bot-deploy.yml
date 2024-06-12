@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.bot.name }}-deployment
+spec:
+  {{- with .Values.bot }}
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      components: {{ .components }}
+  template:
+    metadata:
+      labels:
+        components: {{ .components }}
+    spec:
+      containers:
+        - name: {{ .name }}-container
+          image: "{{ .image }}:{{ .version }}"
+          resources:
+            limits: {{ .limits | toYaml | nindent 14 }}
+  {{- end }}
+          env:
+            {{- range .Values.bot.envs }}
+            {{- $data := dict "secretName" $.Values.bot.name "name" .name "secretKey" .secretKey }}
+            {{- include "env.template" $data | indent 12 }}
+            {{- end }}

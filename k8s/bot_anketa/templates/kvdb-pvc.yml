@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Values.kv_database.name }}-pvc"
+spec:
+  resources:
+    requests:
+      storage: {{ .Values.kv_database.pvc.storageSize }}
+  accessModes:
+    {{- range .Values.kv_database.pvc.accessModes }}
+    - {{ . }}
+    {{- end }}

@@ -1,0 +1,22 @@
+{{- if .Values.migration }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Values.jobs.migration.name }}-job"
+spec:
+  {{- with .Values.jobs.migration }}
+  template:
+    spec:
+      containers:
+      - name: {{ .name }}-container
+        image: "{{ $.Values.bot.image }}:{{ $.Values.bot.version }}"
+        command: ["alembic",  "-c", "bot_anketa/src/alembic.ini", "upgrade", "head"]
+        env:
+          {{- range $.Values.bot.envs }}
+          {{- $data := dict "secretName" $.Values.bot.name "name" .name "secretKey" .secretKey }}
+          {{- include "env.template" $data | indent 10 }}
+          {{- end }}
+      restartPolicy: {{ .restartPolicy }}
+  backoffLimit: {{ .backoffLimit }}
+  {{- end }}
+{{- end }}

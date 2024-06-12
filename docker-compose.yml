@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   tgbot:
-    image: "nezbut/bot_anketa:latest"
+    image: "nezbut/bot_anketa:0.1.0"
     restart: "unless-stopped"
     
     environment:
@@ -34,7 +34,7 @@ services:
         - pg_data:/var/lib/postgresql/data
   
   db_migrations:
-    image: "nezbut/bot_anketa:latest"
+    image: "nezbut/bot_anketa:0.1.0"
     restart: "no"
     depends_on:
       - db
